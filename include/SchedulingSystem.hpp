@@ -159,6 +159,10 @@ public:
   void resetSystem();
 
   // accessor methods and system information
+  int getSystemTime() const;
+  int getNumProcesses() const;
+  bool isCpuIdle() const;
+  string getRunningProcessName() const;
   Pid getRunningPid() const;
   Process* getProcessTable() const;
   string finalResultsTable() const;
