@@ -165,6 +165,7 @@ public:
   string getRunningProcessName() const;
   Pid getRunningPid() const;
   Process* getProcessTable() const;
+  bool allProcessesDone() const;
   string finalResultsTable() const;
   string finalSchedule() const;
 

@@ -148,7 +148,7 @@ int SchedulingSystem::getSystemTime() const
  * @returns int The total number of processes in the process
  * table of the simulation
  */
-int SchedulingSystem::getNumProcesses() const 
+int SchedulingSystem::getNumProcesses() const
 {
   return numProcesses;
 }
@@ -159,7 +159,7 @@ int SchedulingSystem::getNumProcesses() const
  *
  * @returns bool True if the cpu is idle, otherwise false
  */
-bool SchedulingSystem::isCpuIdle() const 
+bool SchedulingSystem::isCpuIdle() const
 {
   if (cpu == IDLE)
   {
@@ -179,7 +179,7 @@ bool SchedulingSystem::isCpuIdle() const
  * @returns string The name of the running process, or
  * IDLE if the cpu is idle
  */
-string SchedulingSystem::getRunningProcessName() const 
+string SchedulingSystem::getRunningProcessName() const
 {
   if (isCpuIdle() == true)
   {
@@ -218,6 +218,27 @@ Pid SchedulingSystem::getRunningPid() const
 Process* SchedulingSystem::getProcessTable() const
 {
   return process;
+}
+
+/** @brief all processes done
+ *
+ * Checks all of the processes to see if they are done to determine
+ * if the simulation should end
+ *
+ * @returns bool True if all the processes are done, otherwise
+ * returns false
+ */
+bool SchedulingSystem::allProcessesDone() const
+{
+  for (int i = 0; i < numProcesses; i++)
+  {
+    if (process[i].done == false)
+    {
+      return false;
+      break;
+    }
+  }
+  return true;
 }
 
 /** @brief final results table
