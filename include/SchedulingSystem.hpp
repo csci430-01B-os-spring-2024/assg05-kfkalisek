@@ -177,6 +177,7 @@ public:
 
   // methods for running paging system simulation
   void checkProcessArrivals();
+  void dispatchCpuIfIdle();
   bool didProcessArrive() const;
   void simulateCpuCycle();
   void checkProcessPreemption();

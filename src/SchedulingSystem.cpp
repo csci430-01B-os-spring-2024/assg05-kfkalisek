@@ -523,6 +523,24 @@ void SchedulingSystem::checkProcessArrivals()
   }
 }
 
+/** @brief dispatch cpu if idle
+ *
+ * Examines the current state of the cpu and works with
+ * the scheduling policy to dispatch a process if the cpu is idle.
+ * Also updates the startTime if the process has never run before.
+ */
+void SchedulingSystem::dispatchCpuIfIdle()
+{
+  if (isCpuIdle())
+  {
+    cpu = policy->dispatch();
+    if (process[cpu].startTime == NOT_STARTED)
+    {
+      process[cpu].startTime = systemTime;
+    }
+  }
+}
+
 /**
  * @brief check if a process did arrive
  *
