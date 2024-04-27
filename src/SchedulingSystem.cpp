@@ -593,6 +593,30 @@ void SchedulingSystem::simulateCpuCycle()
   }
 }
 
+/** @brief check process finished
+ *
+ * This method marks a process as finished in the process
+ * table and records its end time. It also sets the cpu back
+ * to IDLE.
+ */
+void SchedulingSystem::checkProcessFinished()
+{
+  if (cpu == IDLE)
+  {
+    return;
+  }
+  if (process[cpu].usedTime < process[cpu].serviceTime)
+  {
+    return;
+  }
+  else
+  {
+    process[cpu].endTime = systemTime;
+    process[cpu].done = true;
+    cpu = IDLE;
+  }
+}
+
 /**
  * @brief process preemption
  *

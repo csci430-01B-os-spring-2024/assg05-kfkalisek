@@ -180,6 +180,7 @@ public:
   void dispatchCpuIfIdle();
   bool didProcessArrive() const;
   void simulateCpuCycle();
+  void checkProcessFinished();
   void checkProcessPreemption();
   void updateProcessStatistics();
   void runSimulation(bool verbose = false);
