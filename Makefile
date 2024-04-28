@@ -5,8 +5,8 @@ assg_src = SchedulingSystem.cpp \
 	   SchedulingPolicy.cpp \
 	   FCFSSchedulingPolicy.cpp
 	   # HRRNSchedulingPolicy.cpp
-	   # RRSchedulingPolicy.cpp
-	   # SPNSchedulingPolicy.cpp
+	   # RRSchedulingPolicy.cpp \
+	   SPNSchedulingPolicy.cpp
 	   # SRTSchedulingPolicy.cpp
 
 test_src = ${PROJECT_NAME}-tests.cpp \

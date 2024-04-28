@@ -129,6 +129,68 @@ void SchedulingSystem::resetSystem()
   policy->resetPolicy();
 }
 
+/** @brief get the system time
+ *
+ * Accessor method to get the current system time
+ *
+ * @returns int The current system time of the simulation
+ */
+int SchedulingSystem::getSystemTime() const
+{
+  return systemTime;
+}
+
+/** @brief get the number of processes
+ *
+ * Accessor method to get the number of processes
+ * in the process table
+ *
+ * @returns int The total number of processes in the process
+ * table of the simulation
+ */
+int SchedulingSystem::getNumProcesses() const
+{
+  return numProcesses;
+}
+
+/** @brief cpu idle check
+ *
+ * Method to check if the cpu is currently idle
+ *
+ * @returns bool True if the cpu is idle, otherwise false
+ */
+bool SchedulingSystem::isCpuIdle() const
+{
+  if (cpu == IDLE)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+/** @brief get the name of the process currently running
+ *
+ * Accessor method to get the name of the process that is
+ * currently running
+ *
+ * @returns string The name of the running process, or
+ * IDLE if the cpu is idle
+ */
+string SchedulingSystem::getRunningProcessName() const
+{
+  if (isCpuIdle() == true)
+  {
+    return "IDLE";
+  }
+  else
+  {
+    return process[cpu].name;
+  }
+}
+
 /** @brief get pid of running process
  *
  * Returns the process identifier (pid) of the process
@@ -156,6 +218,27 @@ Pid SchedulingSystem::getRunningPid() const
 Process* SchedulingSystem::getProcessTable() const
 {
   return process;
+}
+
+/** @brief all processes done
+ *
+ * Checks all of the processes to see if they are done to determine
+ * if the simulation should end
+ *
+ * @returns bool True if all the processes are done, otherwise
+ * returns false
+ */
+bool SchedulingSystem::allProcessesDone() const
+{
+  for (int i = 0; i < numProcesses; i++)
+  {
+    if (process[i].done == false)
+    {
+      return false;
+      break;
+    }
+  }
+  return true;
 }
 
 /** @brief final results table
@@ -207,6 +290,27 @@ string SchedulingSystem::finalResultsTable() const
 string SchedulingSystem::finalSchedule() const
 {
   return schedule;
+}
+
+/**
+ * @brief get the expected processing time
+ *
+ * This method calculates the expected total processing time by summing up
+ * the service times of all processes in the process table.
+ *
+ * @return int The expected total processing time for all processes.
+ */
+int SchedulingSystem::getExpectedProcessingTime() const
+{
+  int totalProcessingTime = 0;
+
+  // Iterate over the process table and sum up the service times
+  for (int i = 0; i < numProcesses; ++i)
+  {
+    totalProcessingTime += process[i].serviceTime;
+  }
+
+  return totalProcessingTime;
 }
 
 /**
@@ -440,6 +544,24 @@ void SchedulingSystem::checkProcessArrivals()
   }
 }
 
+/** @brief dispatch cpu if idle
+ *
+ * Examines the current state of the cpu and works with
+ * the scheduling policy to dispatch a process if the cpu is idle.
+ * Also updates the startTime if the process has never run before.
+ */
+void SchedulingSystem::dispatchCpuIfIdle()
+{
+  if (isCpuIdle())
+  {
+    cpu = policy->dispatch();
+    if (process[cpu].startTime == NOT_STARTED)
+    {
+      process[cpu].startTime = systemTime;
+    }
+  }
+}
+
 /**
  * @brief check if a process did arrive
  *
@@ -489,6 +611,30 @@ void SchedulingSystem::simulateCpuCycle()
   else // record cpu idle during this time period
   {
     schedule += "I  ";
+  }
+}
+
+/** @brief check process finished
+ *
+ * This method marks a process as finished in the process
+ * table and records its end time. It also sets the cpu back
+ * to IDLE.
+ */
+void SchedulingSystem::checkProcessFinished()
+{
+  if (cpu == IDLE)
+  {
+    return;
+  }
+  if (process[cpu].usedTime < process[cpu].serviceTime)
+  {
+    return;
+  }
+  else
+  {
+    process[cpu].endTime = systemTime;
+    process[cpu].done = true;
+    cpu = IDLE;
   }
 }
 
@@ -584,10 +730,10 @@ void SchedulingSystem::runSimulation(bool verbose)
   // to make scheduling decisions.  We keep running the simulation until
   // all processes in the process table are done
   string schedule = "";
-  /*
+
   while (not allProcessesDone())
   {
-    //cout << "runSimulation()> systemTime: " << systemTime << endl;
+    // cout << "runSimulation()> systemTime: " << systemTime << endl;
 
     // check for new arrivals at this time step so can notify
     // our scheduling policy to add new processs they are managing
@@ -610,7 +756,6 @@ void SchedulingSystem::runSimulation(bool verbose)
     // is up to date for scheduling policies to use
     updateProcessStatistics();
   }
-  */
 
   // Display scheduling simulation results if asked too
   if (verbose)

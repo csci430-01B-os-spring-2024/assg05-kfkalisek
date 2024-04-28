@@ -159,10 +159,16 @@ public:
   void resetSystem();
 
   // accessor methods and system information
+  int getSystemTime() const;
+  int getNumProcesses() const;
+  bool isCpuIdle() const;
+  string getRunningProcessName() const;
   Pid getRunningPid() const;
   Process* getProcessTable() const;
+  bool allProcessesDone() const;
   string finalResultsTable() const;
   string finalSchedule() const;
+  int getExpectedProcessingTime() const;
 
   // methods for loading or generating page reference streams
   // for the simulation
@@ -172,8 +178,10 @@ public:
 
   // methods for running paging system simulation
   void checkProcessArrivals();
+  void dispatchCpuIfIdle();
   bool didProcessArrive() const;
   void simulateCpuCycle();
+  void checkProcessFinished();
   void checkProcessPreemption();
   void updateProcessStatistics();
   void runSimulation(bool verbose = false);
