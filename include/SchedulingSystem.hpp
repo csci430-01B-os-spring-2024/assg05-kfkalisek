@@ -168,6 +168,7 @@ public:
   bool allProcessesDone() const;
   string finalResultsTable() const;
   string finalSchedule() const;
+  int getExpectedProcessingTime() const;
 
   // methods for loading or generating page reference streams
   // for the simulation

@@ -54,7 +54,13 @@ SPNSchedulingPolicy::~SPNSchedulingPolicy() {}
  */
 void SPNSchedulingPolicy::newProcess(Pid pid)
 {
-  // put the new process on the end of the ready queue
+  double expectedProcessingTime = getExpectedProcessingTime(pid);
+
+  if (expectedProcessingTime < shortestTime)
+  {
+    shortestProcess = pid;
+    shortestTime = expectedProcessingTime;
+  }
   readyQueue.push(pid);
 }
 
@@ -77,13 +83,17 @@ Pid SPNSchedulingPolicy::dispatch()
   {
     return IDLE;
   }
-  // otherwise pop the front item and return it
-  else
+
+  Pid selectedProcess = shortestProcess;
+  readyQueue.pop();
+
+  if (!readyQueue.empty())
   {
-    int pid = readyQueue.front();
-    readyQueue.pop();
-    return pid;
+    shortestProcess = readyQueue.front();
+    shortestTime = getExpectedProcessingTime(shortestProcess);
   }
+
+  return selectedProcess;
 }
 
 /**

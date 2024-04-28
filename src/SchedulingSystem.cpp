@@ -293,6 +293,27 @@ string SchedulingSystem::finalSchedule() const
 }
 
 /**
+ * @brief get the expected processing time
+ *
+ * This method calculates the expected total processing time by summing up
+ * the service times of all processes in the process table.
+ *
+ * @return int The expected total processing time for all processes.
+ */
+int SchedulingSystem::getExpectedProcessingTime() const
+{
+  int totalProcessingTime = 0;
+
+  // Iterate over the process table and sum up the service times
+  for (int i = 0; i < numProcesses; ++i)
+  {
+    totalProcessingTime += process[i].serviceTime;
+  }
+
+  return totalProcessingTime;
+}
+
+/**
  * @brief load process table from file
  *
  * Load a table of process arrival and service time information

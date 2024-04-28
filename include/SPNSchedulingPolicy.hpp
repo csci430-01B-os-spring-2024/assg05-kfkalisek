@@ -30,10 +30,9 @@ typedef int Pid;
 /** @class SPNSchedulingPolicy
  * @brief SPNSchedulingPolicy abstract base class
  *
- * This class defines the interface or API for the helper page
- * replacement scheme.  A PagingSystem simulation will instanciate
- * a derived class of this API, and will expect it to implement the
- * interface defined by this abstract base class.
+ * This class defines the interface or API for the SPN (Shortest Process Next)
+ * scheduling policy. A concrete subclass of this class is expected to implement
+ * the defined interface.
  */
 class SPNSchedulingPolicy : public SchedulingPolicy
 {
@@ -41,6 +40,8 @@ private:
   /// @brief The ready queue for the FCFS policy, keeps track of
   ///   which process arrived first for dispatching.
   queue<Pid> readyQueue;
+  Pid shortestProcess;
+  double shortestTime;
 
 public:
   SPNSchedulingPolicy();
@@ -53,6 +54,7 @@ public:
   Pid dispatch();
   bool preempt();
   void resetPolicy();
+  double getExpectedProcessingTime(Pid pid);
 };
 
 #endif // SPNSCHEDULING_POLICY_HPP
